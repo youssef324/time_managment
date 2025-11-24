@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../themes/widget/widgets/custom_button.dart';
-import '../themes/widget/widgets/custom_textfield.dart';
-import '../themes/widget/themes/text_styles.dart';
-import '../themes/widget/themes/colors.dart';
+import '../widget/custom_button.dart';
+import '../widget/custom_textfield.dart';
+import '../themes/text_styles.dart';
+import '../themes/colors.dart';
 
 class LoginView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -51,7 +51,9 @@ class LoginView extends StatelessWidget {
               Center(
                 child: Text(
                   'Forgot Password?',
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.primary),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
               SizedBox(height: 20),

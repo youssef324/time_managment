@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../themes/text_styles.dart';
 import '../themes/colors.dart';
-import '../widgets/custom_button.dart';
+import '../widget/custom_button.dart';
 
 class TaskDetailsView extends StatelessWidget {
   final Map<String, dynamic>? task;
@@ -22,7 +22,9 @@ class TaskDetailsView extends StatelessWidget {
           },
         ),
       ),
-      body: task == null ? Center(child: Text('No task data')) : _buildTaskDetails(context),
+      body: task == null
+          ? Center(child: Text('No task data'))
+          : _buildTaskDetails(context),
     );
   }
 
@@ -48,14 +50,18 @@ class TaskDetailsView extends StatelessWidget {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: task!['isCompleted'] 
-                              ? AppColors.accent.withOpacity(0.1) 
+                          color: task!['isCompleted']
+                              ? AppColors.accent.withOpacity(0.1)
                               : AppColors.primary.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          task!['isCompleted'] ? Icons.check_circle : Icons.access_time,
-                          color: task!['isCompleted'] ? AppColors.accent : AppColors.primary,
+                          task!['isCompleted']
+                              ? Icons.check_circle
+                              : Icons.access_time,
+                          color: task!['isCompleted']
+                              ? AppColors.accent
+                              : AppColors.primary,
                         ),
                       ),
                       SizedBox(width: 12),
@@ -63,8 +69,8 @@ class TaskDetailsView extends StatelessWidget {
                         child: Text(
                           task!['title'],
                           style: AppTextStyles.heading3.copyWith(
-                            decoration: task!['isCompleted'] 
-                                ? TextDecoration.lineThrough 
+                            decoration: task!['isCompleted']
+                                ? TextDecoration.lineThrough
                                 : TextDecoration.none,
                           ),
                         ),
@@ -72,26 +78,45 @@ class TaskDetailsView extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16),
-                  Text('Description', style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Description',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   SizedBox(height: 8),
                   Text(task!['description'], style: AppTextStyles.bodyMedium),
                   SizedBox(height: 16),
-                  Text('Due Date', style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Due Date',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   SizedBox(height: 8),
                   Text(task!['dueDate'], style: AppTextStyles.bodyMedium),
                   SizedBox(height: 16),
-                  Text('Status', style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Status',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   SizedBox(height: 8),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: task!['isCompleted'] ? AppColors.accent.withOpacity(0.1) : AppColors.primary.withOpacity(0.1),
+                      color: task!['isCompleted']
+                          ? AppColors.accent.withOpacity(0.1)
+                          : AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       task!['isCompleted'] ? 'Completed' : 'In Progress',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: task!['isCompleted'] ? AppColors.accent : AppColors.primary,
+                        color: task!['isCompleted']
+                            ? AppColors.accent
+                            : AppColors.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

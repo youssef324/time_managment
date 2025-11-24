@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../themes/themes/colors.dart';
-import '../themes/themes/text_styles.dart';
+import '../themes/colors.dart';
+import '../themes/text_styles.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final TextEditingController? controller;
-  
+
   const CustomTextField({
     required this.hintText,
     this.obscureText = false,

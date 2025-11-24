@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/task_card.dart';
+import '../widget/task_card.dart';
 import '../themes/text_styles.dart';
 import '../themes/colors.dart';
 

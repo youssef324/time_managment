@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'routes/app_routes.dart';
+import 'widget/app_routes.dart';
 
 void main() {
   runApp(MyApp());

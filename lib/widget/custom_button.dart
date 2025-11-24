@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../themes/themes/colors.dart';
-import '../themes/themes/text_styles.dart';
+import '../themes/colors.dart';
+import '../themes/text_styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isPrimary;
-  
+
   const CustomButton({
     required this.text,
     required this.onPressed,
@@ -25,13 +25,17 @@ class CustomButton extends StatelessWidget {
           foregroundColor: isPrimary ? Colors.white : AppColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: isPrimary ? BorderSide.none : BorderSide(color: AppColors.primary),
+            side: isPrimary
+                ? BorderSide.none
+                : BorderSide(color: AppColors.primary),
           ),
           elevation: 0,
         ),
         child: Text(
           text,
-          style: isPrimary ? AppTextStyles.button : AppTextStyles.button.copyWith(color: AppColors.primary),
+          style: isPrimary
+              ? AppTextStyles.button
+              : AppTextStyles.button.copyWith(color: AppColors.primary),
         ),
       ),
     );

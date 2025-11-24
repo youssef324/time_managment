@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../themes/views/login_view.dart';
-import '../themes/views/home_view.dart';
-import '../themes/views/task_details_view.dart';
+import '../views/login_view.dart';
+import '../views/home_view.dart';
+import '../views/task_details_view.dart';
 
 class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,9 +15,7 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => TaskDetailsView(task: task));
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text('Page not found')),
-          ),
+          builder: (_) => Scaffold(body: Center(child: Text('Page not found'))),
         );
     }
   }

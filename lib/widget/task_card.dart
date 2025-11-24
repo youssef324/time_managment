@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../themes/themes/colors.dart';
-import '../themes/themes/text_styles.dart';
+import '../themes/colors.dart';
+import '../themes/text_styles.dart';
 
 class TaskCard extends StatelessWidget {
   final String title;
@@ -22,16 +22,16 @@ class TaskCard extends StatelessWidget {
     return Card(
       elevation: 2,
       margin: EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         contentPadding: EdgeInsets.all(16),
         leading: Container(
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: isCompleted ? AppColors.accent.withOpacity(0.1) : AppColors.primary.withOpacity(0.1),
+            color: isCompleted
+                ? AppColors.accent.withOpacity(0.1)
+                : AppColors.primary.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -42,7 +42,9 @@ class TaskCard extends StatelessWidget {
         title: Text(
           title,
           style: AppTextStyles.bodyLarge.copyWith(
-            decoration: isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+            decoration: isCompleted
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
           ),
         ),
         subtitle: Column(

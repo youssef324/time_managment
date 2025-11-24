@@ -87,10 +87,90 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: AppColors.surface,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: AppColors.textPrimary),
-            onPressed: () {},
-            tooltip: 'Search tasks',
+          Semantics(
+            button: true,
+            label: 'Search tasks',
+            hint: 'Opens a search dialog to find tasks by title',
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.0),
+              child: IconButton(
+                icon: Icon(Icons.search, color: AppColors.textPrimary),
+                onPressed: () async {
+                  // Simple accessible search: show a dialog where user can type a query
+                  final query = await showDialog<String>(
+                    context: context,
+                    builder: (context) {
+                      String value = '';
+                      return AlertDialog(
+                        title: Text('Search tasks'),
+                        content: TextField(
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: 'Enter task title',
+                          ),
+                          onChanged: (v) => value = v,
+                          onSubmitted: (v) => Navigator.of(context).pop(v),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(value),
+                            child: Text('Search'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (query != null && query.trim().isNotEmpty) {
+                    // Navigate to a simple results view or filter in-place. For now, show results in a dialog.
+                    final results = TaskService.getAllTasks()
+                        .where(
+                          (t) => t.title.toLowerCase().contains(
+                            query.toLowerCase().trim(),
+                          ),
+                        )
+                        .toList();
+
+                    await showDialog(
+                      context: context,
+                      builder: (context) => SimpleDialog(
+                        title: Text('Search results'),
+                        children: results.isEmpty
+                            ? [
+                                Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Text('No tasks found'),
+                                ),
+                              ]
+                            : results
+                                  .map(
+                                    (t) => SimpleDialogOption(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/task_details',
+                                          arguments: t.toJson(),
+                                        ).then((_) => setState(() {}));
+                                      },
+                                      child: ListTile(
+                                        title: Text(t.title),
+                                        subtitle: Text('Due: ${t.dueDate}'),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                      ),
+                    );
+                  }
+                },
+                tooltip: 'Search tasks',
+              ),
+            ),
           ),
           Semantics(
             button: true,

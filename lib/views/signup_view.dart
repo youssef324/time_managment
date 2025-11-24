@@ -5,34 +5,41 @@ import '../themes/text_styles.dart';
 import '../themes/colors.dart';
 import '../services/auth_service.dart';
 
-class LoginView extends StatefulWidget {
+class SignUpView extends StatefulWidget {
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignUpViewState extends State<SignUpView> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   bool isLoading = false;
   String? errorMessage;
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleSignUp() async {
     setState(() {
       isLoading = true;
       errorMessage = null;
     });
 
     try {
-      final response = await AuthService.login(
+      final response = await AuthService.signUp(
         emailController.text.trim(),
         passwordController.text,
+        confirmPasswordController.text,
+        nameController.text.trim(),
       );
 
       if (!mounted) return;
@@ -74,6 +81,21 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          'Create Account',
+          style: AppTextStyles.heading2.copyWith(color: Colors.white),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -82,8 +104,8 @@ class _LoginViewState extends State<LoginView> {
             colors: [
               Color(0xFF0F172A), // Dark blue
               Color(0xFF1E3A8A), // Deep blue
-              Color(0xFF1E40AF), // Medium blue
-              Color(0xFF3B82F6), // Bright blue
+              Color(0xFF0EA5E9), // Cyan
+              Color(0xFF06B6D4), // Sky blue
             ],
           ),
         ),
@@ -94,32 +116,24 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 40),
-                  // Header section
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome Back!',
-                          style: AppTextStyles.heading1.copyWith(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Sign in to continue',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: Colors.white70,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                  SizedBox(height: 20),
+                  Text(
+                    'Join Us Today!',
+                    style: AppTextStyles.heading1.copyWith(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 8),
+                  Text(
+                    'Create your account to get started',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: Colors.white70,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 32),
                   // Form container with glass effect
                   Container(
                     decoration: BoxDecoration(
@@ -139,6 +153,12 @@ class _LoginViewState extends State<LoginView> {
                       child: Column(
                         children: [
                           CustomTextField(
+                            hintText: 'Full Name',
+                            controller: nameController,
+                            enabled: !isLoading,
+                          ),
+                          SizedBox(height: 16),
+                          CustomTextField(
                             hintText: 'Email Address',
                             controller: emailController,
                             enabled: !isLoading,
@@ -148,6 +168,13 @@ class _LoginViewState extends State<LoginView> {
                             hintText: 'Password',
                             obscureText: true,
                             controller: passwordController,
+                            enabled: !isLoading,
+                          ),
+                          SizedBox(height: 16),
+                          CustomTextField(
+                            hintText: 'Confirm Password',
+                            obscureText: true,
+                            controller: confirmPasswordController,
                             enabled: !isLoading,
                           ),
                           if (errorMessage != null)
@@ -162,39 +189,34 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           SizedBox(height: 24),
                           CustomButton(
-                            text: isLoading ? 'Signing In...' : 'Sign In',
-                            onPressed: isLoading ? null : _handleLogin,
-                          ),
-                          SizedBox(height: 12),
-                          CustomButton(
-                            text: 'Create Account',
-                            onPressed: isLoading
-                                ? null
-                                : () {
-                                    Navigator.pushNamed(context, '/signup');
-                                  },
-                            isPrimary: false,
+                            text: isLoading ? 'Creating Account...' : 'Sign Up',
+                            onPressed: isLoading ? null : _handleSignUp,
                           ),
                           SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: isLoading
-                                ? null
-                                : () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Forgot password feature coming soon',
-                                        ),
-                                      ),
-                                    );
-                                  },
-                            child: Text(
-                              'Forgot Password?',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w600,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Already have an account? ',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: Color(0xFF1E293B),
+                                ),
                               ),
-                            ),
+                              GestureDetector(
+                                onTap: isLoading
+                                    ? null
+                                    : () {
+                                        Navigator.pop(context);
+                                      },
+                                child: Text(
+                                  'Sign In',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../views/login_view.dart';
+import '../views/signup_view.dart';
 import '../views/home_view.dart';
 import '../views/task_details_view.dart';
 
@@ -8,6 +9,8 @@ class AppRoutes {
     switch (settings.name) {
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginView());
+      case '/signup':
+        return MaterialPageRoute(builder: (_) => SignUpView());
       case '/home':
         return MaterialPageRoute(builder: (_) => HomeView());
       case '/task_details':

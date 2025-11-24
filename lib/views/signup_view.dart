@@ -4,6 +4,7 @@ import '../widget/custom_textfield.dart';
 import '../themes/text_styles.dart';
 import '../themes/colors.dart';
 import '../services/auth_service.dart';
+import 'email_verification_view.dart';
 
 class SignUpView extends StatefulWidget {
   @override
@@ -45,7 +46,23 @@ class _SignUpViewState extends State<SignUpView> {
       if (!mounted) return;
 
       if (response.isSuccess) {
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        // Navigate to email verification
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationView(
+              email: emailController.text.trim(),
+              onVerified: () {
+                // After verification, navigate to home
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/home',
+                  (route) => false,
+                );
+              },
+            ),
+          ),
+        );
       } else {
         setState(() {
           errorMessage = response.message;

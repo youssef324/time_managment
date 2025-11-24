@@ -2,11 +2,40 @@ import 'package:flutter/material.dart';
 import '../themes/text_styles.dart';
 import '../themes/colors.dart';
 import '../widget/custom_button.dart';
+import '../services/task_service.dart';
 
-class TaskDetailsView extends StatelessWidget {
+class TaskDetailsView extends StatefulWidget {
   final Map<String, dynamic>? task;
 
   const TaskDetailsView({this.task});
+
+  @override
+  State<TaskDetailsView> createState() => _TaskDetailsViewState();
+}
+
+class _TaskDetailsViewState extends State<TaskDetailsView> {
+  late Map<String, dynamic> currentTask;
+
+  @override
+  void initState() {
+    super.initState();
+    currentTask = widget.task ?? {};
+  }
+
+  void _markAsComplete() {
+    final taskId = currentTask['id'];
+    TaskService.markAsCompleted(taskId);
+    setState(() {
+      currentTask['isCompleted'] = true;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Task marked as complete!'),
+        backgroundColor: AppColors.accent,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +47,11 @@ class TaskDetailsView extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppColors.textPrimary),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, currentTask);
           },
         ),
       ),
-      body: task == null
+      body: currentTask.isEmpty
           ? Center(child: Text('No task data'))
           : _buildTaskDetails(context),
     );
@@ -50,16 +79,16 @@ class TaskDetailsView extends StatelessWidget {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: task!['isCompleted']
+                          color: currentTask['isCompleted']
                               ? AppColors.accent.withOpacity(0.1)
                               : AppColors.primary.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          task!['isCompleted']
+                          currentTask['isCompleted']
                               ? Icons.check_circle
                               : Icons.access_time,
-                          color: task!['isCompleted']
+                          color: currentTask['isCompleted']
                               ? AppColors.accent
                               : AppColors.primary,
                         ),
@@ -67,9 +96,9 @@ class TaskDetailsView extends StatelessWidget {
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          task!['title'],
+                          currentTask['title'] ?? 'No title',
                           style: AppTextStyles.heading3.copyWith(
-                            decoration: task!['isCompleted']
+                            decoration: currentTask['isCompleted']
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none,
                           ),
@@ -85,7 +114,10 @@ class TaskDetailsView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(task!['description'], style: AppTextStyles.bodyMedium),
+                  Text(
+                    currentTask['description'] ?? 'No description',
+                    style: AppTextStyles.bodyMedium,
+                  ),
                   SizedBox(height: 16),
                   Text(
                     'Due Date',
@@ -94,7 +126,10 @@ class TaskDetailsView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(task!['dueDate'], style: AppTextStyles.bodyMedium),
+                  Text(
+                    currentTask['dueDate'] ?? 'No due date',
+                    style: AppTextStyles.bodyMedium,
+                  ),
                   SizedBox(height: 16),
                   Text(
                     'Status',
@@ -106,15 +141,15 @@ class TaskDetailsView extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: task!['isCompleted']
+                      color: currentTask['isCompleted']
                           ? AppColors.accent.withOpacity(0.1)
                           : AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      task!['isCompleted'] ? 'Completed' : 'In Progress',
+                      currentTask['isCompleted'] ? 'Completed' : 'In Progress',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: task!['isCompleted']
+                        color: currentTask['isCompleted']
                             ? AppColors.accent
                             : AppColors.primary,
                         fontWeight: FontWeight.w600,
@@ -126,16 +161,9 @@ class TaskDetailsView extends StatelessWidget {
             ),
           ),
           SizedBox(height: 24),
-          if (!task!['isCompleted'])
-            CustomButton(
-              text: 'Mark as Complete',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Task marked as complete!')),
-                );
-              },
-            ),
-          SizedBox(height: 12),
+          if (!currentTask['isCompleted'])
+            CustomButton(text: 'Mark as Complete', onPressed: _markAsComplete),
+          if (!currentTask['isCompleted']) SizedBox(height: 12),
           CustomButton(
             text: 'Edit Task',
             onPressed: () {

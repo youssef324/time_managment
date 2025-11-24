@@ -3,7 +3,9 @@ import '../widget/task_card.dart';
 import '../themes/text_styles.dart';
 import '../themes/colors.dart';
 import '../services/task_service.dart';
+import '../services/notification_service.dart';
 import 'add_task_dialog.dart';
+import 'notifications_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -32,6 +34,9 @@ class _HomeViewState extends State<HomeView> {
         description: 'Update project documentation',
         dueDate: 'Dec 25, 2024',
       );
+      // Add demo notifications
+      NotificationService.add('Welcome', 'Thanks for trying the app — enjoy!');
+      NotificationService.add('Tips', 'Tap the + button to add new tasks.');
     }
   }
 
@@ -85,10 +90,21 @@ class _HomeViewState extends State<HomeView> {
           IconButton(
             icon: Icon(Icons.search, color: AppColors.textPrimary),
             onPressed: () {},
+            tooltip: 'Search tasks',
           ),
-          IconButton(
-            icon: Icon(Icons.notifications, color: AppColors.textPrimary),
-            onPressed: () {},
+          Semantics(
+            button: true,
+            label: 'Notifications',
+            child: IconButton(
+              icon: Icon(Icons.notifications, color: AppColors.textPrimary),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => NotificationsView()),
+                );
+              },
+              tooltip: 'Open notifications',
+            ),
           ),
         ],
       ),
@@ -171,10 +187,14 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddTaskDialog,
-        backgroundColor: AppColors.primary,
-        child: Icon(Icons.add, color: Colors.white),
+      floatingActionButton: Semantics(
+        button: true,
+        label: 'Add task',
+        child: FloatingActionButton(
+          onPressed: _showAddTaskDialog,
+          backgroundColor: AppColors.primary,
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ),
     );
   }

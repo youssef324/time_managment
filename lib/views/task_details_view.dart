@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../themes/text_styles.dart';
 import '../themes/colors.dart';
 import '../widget/custom_button.dart';
+import 'edit_task_dialog.dart';
 import '../services/task_service.dart';
 
 class TaskDetailsView extends StatefulWidget {
@@ -164,12 +165,39 @@ class _TaskDetailsViewState extends State<TaskDetailsView> {
           if (!currentTask['isCompleted'])
             CustomButton(text: 'Mark as Complete', onPressed: _markAsComplete),
           if (!currentTask['isCompleted']) SizedBox(height: 12),
-          CustomButton(
-            text: 'Edit Task',
-            onPressed: () {
-              // Handle edit task
-            },
-            isPrimary: false,
+          Semantics(
+            button: true,
+            label: 'Edit task',
+            child: CustomButton(
+              text: 'Edit Task',
+              onPressed: () async {
+                final result = await showDialog(
+                  context: context,
+                  builder: (context) => EditTaskDialog(task: currentTask),
+                );
+
+                if (result != null && mounted) {
+                  final updated = TaskService.updateTask(
+                    currentTask['id'],
+                    title: result['title'],
+                    description: result['description'],
+                    dueDate: result['dueDate'],
+                  );
+                  if (updated != null) {
+                    setState(() {
+                      currentTask = updated.toJson();
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Task updated'),
+                        backgroundColor: AppColors.primary,
+                      ),
+                    );
+                  }
+                }
+              },
+              isPrimary: false,
+            ),
           ),
         ],
       ),
